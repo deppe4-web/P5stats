@@ -1,0 +1,9 @@
+{
+  "appId": "app.estrella.stats",
+  "appName": "Estrella",
+  "webDir": "www",
+  "backgroundColor": "#0a0a0a",
+  "server": {
+    "androidScheme": "https"
+  }
+}
