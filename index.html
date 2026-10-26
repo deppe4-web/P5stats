@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Estrella</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Estrella">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-slash" aria-hidden="true"></div>
+
+  <div id="app">
+    <header class="top">
+      <div class="brand"><span>ESTRELLA</span></div>
+      <div class="lvl" id="levelTag">NIVEL 1</div>
+    </header>
+
+    <main>
+      <!-- INICIO -->
+      <section id="view-home" class="view is-active">
+        <div class="star-wrap" id="starWrap"></div>
+        <p class="star-info" id="starInfo">Tocá una punta para ver qué cuenta en esa zona.</p>
+
+        <div class="today-bar"><span>HOY</span><b id="todayCount">0/3</b></div>
+        <div class="slots" id="slots"></div>
+        <p class="goal" id="goalNote"></p>
+
+        <button class="btn-main" id="btnNew" type="button"><span>NUEVO PUNTO</span></button>
+      </section>
+
+      <!-- ARCANOS -->
+      <section id="view-arcanos" class="view">
+        <h2 class="h-slant"><span>ARCANOS</span></h2>
+        <p class="arc-sum" id="arcSummary"></p>
+        <div class="arc-grid" id="arcGrid"></div>
+        <button class="btn-main arc-add" id="btnArcAdd" type="button"><span>+ AGREGAR ARCANO</span></button>
+      </section>
+
+      <!-- HISTORIAL -->
+      <section id="view-log" class="view">
+        <h2 class="h-slant"><span>HISTORIAL</span></h2>
+        <div class="chips" id="logFilters"></div>
+        <ul class="log" id="logList"></ul>
+      </section>
+
+      <!-- AJUSTES -->
+      <section id="view-settings" class="view">
+        <h2 class="h-slant"><span>AJUSTES</span></h2>
+
+        <div class="card">
+          <label class="lbl-d" for="cfgFranjas">FRANJAS PARA COMPLETAR CADA ZONA</label>
+          <input id="cfgFranjas" type="number" inputmode="numeric" min="3" max="30">
+          <p class="muted">Igual para las 5 zonas. Si lo bajás, se recortan las que se pasen.</p>
+        </div>
+
+        <div class="card">
+          <label class="lbl-d" for="cfgCriteria">CRITERIOS DEL SIGUIENTE NIVEL</label>
+          <textarea id="cfgCriteria" rows="3" maxlength="300"></textarea>
+          <p class="muted">Aparece cuando llenás la estrella. Del nivel 2 en adelante, además, cada punto tiene que ser más difícil que lo que ya hacías.</p>
+        </div>
+
+        <div class="card">
+          <label class="lbl-d" for="cfgArcMax">RAYITAS PARA COMPLETAR UN ARCANO</label>
+          <input id="cfgArcMax" type="number" inputmode="numeric" min="3" max="30">
+          <p class="muted">Cada rayita es un momento real con esa persona. Una por día por arcano.</p>
+        </div>
+
+        <div class="card">
+          <details>
+            <summary class="lbl-d">LAS REGLAS</summary>
+            <ul class="rules">
+              <li>Máximo 3 puntos por día: uno por franja (mañana, tarde, noche). La meta es 1; un día en cero no borra nada.</li>
+              <li>Cuenta si te costó algo, no fue en piloto automático y se cierra en una semana. Si tomaría meses, partilo.</li>
+              <li>Físico: una semana completa de gym sin fallar = 1 punto. Una sesión suelta no pinta.</li>
+              <li>Primera vez, algo escaso o un hito = doble franja.</li>
+              <li>Zona llena en todas = estrella completa = nivel siguiente, con otro color y vara más alta.</li>
+              <li>Arcanos: una rayita por día por persona, solo si fue tiempo real y con atención. No gastan franjas del día.</li>
+            </ul>
+          </details>
+        </div>
+
+        <div class="card">
+          <details>
+            <summary class="lbl-d">CÓMO LA INSTALO</summary>
+            <ul class="rules">
+              <li><b>Android (Chrome):</b> menú ⋮ → «Instalar app» o «Agregar a la pantalla principal».</li>
+              <li><b>iPhone (Safari):</b> botón Compartir → «Agregar a inicio».</li>
+            </ul>
+          </details>
+          <button class="btn-sm" id="btnInstall" type="button" hidden>INSTALAR AHORA</button>
+        </div>
+
+        <div class="card">
+          <span class="lbl-d">RESPALDO</span>
+          <p class="muted">Tus datos viven solo en este teléfono. Bajate un respaldo de vez en cuando.</p>
+          <div class="row">
+            <button class="btn-sm" id="btnExport" type="button">EXPORTAR</button>
+            <button class="btn-sm" id="btnImport" type="button">IMPORTAR</button>
+            <input id="fileImport" type="file" accept="application/json,.json" hidden>
+          </div>
+        </div>
+
+        <div class="card danger">
+          <span class="lbl-d">ZONA PELIGROSA</span>
+          <button class="btn-sm btn-red" id="btnReset" type="button">BORRAR TODO</button>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabs" aria-label="Secciones">
+      <button class="tab is-active" type="button" data-view="home"><span>ESTRELLA</span></button>
+      <button class="tab" type="button" data-view="arcanos"><span>ARCANOS</span></button>
+      <button class="tab" type="button" data-view="log"><span>HISTORIAL</span></button>
+      <button class="tab" type="button" data-view="settings"><span>AJUSTES</span></button>
+    </nav>
+  </div>
+
+  <!-- NUEVO PUNTO -->
+  <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="Nuevo punto">
+    <div class="sheet-inner">
+      <button class="x" id="sheetClose" type="button" aria-label="Cerrar">✕</button>
+      <h2 class="h-slant dark"><span>NUEVO PUNTO</span></h2>
+
+      <div id="sheetForm">
+        <span class="lbl">¿QUÉ HICISTE?</span>
+        <textarea id="fText" rows="2" maxlength="160" placeholder="Concreto: qué, con quién, cuánto."></textarea>
+
+        <span class="lbl">STAT</span>
+        <div class="pick" id="fStats"></div>
+        <p class="hint" id="fHint"></p>
+
+        <span class="lbl">FRANJA DEL DÍA</span>
+        <div class="pick" id="fSlots"></div>
+
+        <span class="lbl">SÉ HONESTO</span>
+        <div id="fGates"></div>
+
+        <button class="btn-main" id="btnEval" type="button" disabled><span>EVALUAR</span></button>
+      </div>
+
+      <div id="sheetVerdict" hidden></div>
+    </div>
+  </div>
+
+  <!-- ARCANO (detalle) -->
+  <div id="arcSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="Arcano">
+    <div class="sheet-inner">
+      <button class="x" id="arcClose" type="button" aria-label="Cerrar">✕</button>
+      <div id="arcBody"></div>
+    </div>
+  </div>
+
+  <div id="overlay" class="overlay" hidden></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="arcanos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
